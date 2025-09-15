@@ -1,32 +1,40 @@
 <?php
+header('Content-Type: application/json');
+
+// Include your existing DB config
 require 'config.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $title = trim($_POST['title'] ?? '');
-    $details = trim($_POST['details'] ?? '');
-    $benefit = trim($_POST['benefit'] ?? '');
-    $submitted_name = trim($_POST['name'] ?? '');
+// Read raw POST data (JSON)
+$data = json_decode(file_get_contents('php://input'), true);
 
-    if (empty($title) || empty($details) || empty($submitted_name)) {
-        echo "Please fill in all required fields.";
-        exit;
-    }
+// Basic validation
+if (!isset($data['title'], $data['details'], $data['benefit'], $data['name'])) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Missing required fields']);
+    exit;
+}
 
-    try {
-        $stmt = $pdo->prepare("
-            INSERT INTO requests (title, details, benefit, submitted_name)
-            VALUES (:title, :details, :benefit, :submitted_name)
-        ");
-        $stmt->execute([
-            ':title' => $title,
-            ':details' => $details,
-            ':benefit' => $benefit,
-            ':submitted_name' => $submitted_name
-        ]);
+// Sanitize inputs
+$title = trim($data['title']);
+$details = trim($data['details']);
+$benefit = trim($data['benefit']);
+$name = trim($data['name']);
 
-        echo "Your idea has been submitted successfully!";
-    } catch (PDOException $e) {
-        echo "Error submitting request.";
-    }
+try {
+    $stmt = $pdo->prepare("
+        INSERT INTO requests (title, details, benefit, submitted_name)
+        VALUES (:title, :details, :benefit, :submitted_name)
+    ");
+    $stmt->execute([
+        ':title' => $title,
+        ':details' => $details,
+        ':benefit' => $benefit,
+        ':submitted_name' => $name,
+    ]);
+
+    echo json_encode(['success' => true, 'message' => 'Request submitted successfully.']);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }
 ?>

@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ideaForm) {
         ideaForm.addEventListener('submit', async (e) => {
             e.preventDefault(); // prevent default form action
-            console.log("Submitting idea...");
+            alert('hired.');
 
             // Get form values
             const title = document.getElementById('title').value.trim();

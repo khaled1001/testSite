@@ -14,6 +14,51 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = 'none';
     };
 
+    // Handle Idea Form Submission
+    const ideaForm = document.getElementById('ideaForm');
+    if (ideaForm) {
+        ideaForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // prevent default form action
+
+            // Get form values
+            const title = document.getElementById('title').value.trim();
+            const details = document.getElementById('details').value.trim();
+            const benefit = document.getElementById('benefit').value.trim();
+            const name = document.getElementById('name').value.trim();
+
+            // Basic validation
+            if (!title || !details || !benefit || !name) {
+                alert("Please fill out all fields.");
+                return;
+            }
+
+            try {
+                // 👇👇 Here's the fetch() code you asked about:
+                const response = await fetch('submit_request.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title, details, benefit, name })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message || 'Idea submitted successfully!');
+                    ideaForm.reset();
+                    document.getElementById('post-request-modal').style.display = 'none';
+                    // Optionally reload idea cards
+                } else {
+                    alert(result.error || 'Submission failed.');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('An unexpected error occurred.');
+            }
+        });
+    }
+
     // Event listeners
     if (postRequestNav) {
         // A bit of a hack to find the "Post a Request" button since there are multiple `a[href="#"]`

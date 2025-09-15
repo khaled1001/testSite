@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ideaForm) {
         ideaForm.addEventListener('submit', async (e) => {
             e.preventDefault(); // prevent default form action
+            console.log("Submitting idea...");
 
             // Get form values
             const title = document.getElementById('title').value.trim();
@@ -33,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // 👇👇 Here's the fetch() code you asked about:
                 const response = await fetch('submit_request.php', {
                     method: 'POST',
                     headers: {

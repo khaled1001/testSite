@@ -19,13 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ideaForm) {
         ideaForm.addEventListener('submit', async (e) => {
             e.preventDefault(); // prevent default form action
-            alert('hired.');
 
             // Get form values
             const title = document.getElementById('title').value.trim();
             const details = document.getElementById('details').value.trim();
             const benefit = document.getElementById('benefit').value.trim();
             const name = document.getElementById('name').value.trim();
+
 
             // Basic validation
             if (!title || !details || !benefit || !name) {
@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
+                console.log("Sending request...");
                 const response = await fetch('submit_request.php', {
                     method: 'POST',
                     headers: {
@@ -42,7 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ title, details, benefit, name })
                 });
 
+                alert(title);
+
                 const result = await response.json();
+                console.log("Server response:", result);
 
                 if (response.ok) {
                     alert(result.message || 'Idea submitted successfully!');

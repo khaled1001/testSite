@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: https://khaled1001.github.io");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 header('Content-Type: application/json');
 require 'config.php';
 

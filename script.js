@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ title, details, benefit, name })
                 });
 
-                alert(title);
+                alert("hi");
 
                 const result = await response.json();
                 console.log("Server response:", result);
